@@ -4,10 +4,18 @@ import pandas as pd
 def main():
     df = pd.read_csv("../input/train.csv")
     print(df)
+    df = filterNonEnglishChars(df)
     df = filterLength(df, 10)
+    print(df)
 
 
-def isEnglish(s):
+def isEnglish(s: str) -> bool:
+    """
+    Check if a string contains all english characters
+
+    :param s: string to check
+    :return: whether string contains only english characters
+    """
     try:
         s.encode(encoding='utf-8').decode('ascii')
     except UnicodeDecodeError:
@@ -16,33 +24,37 @@ def isEnglish(s):
         return True
 
 
-def filterLength(df, length: int):
+def filterLength(df: pd.DataFrame, length: int) -> pd.DataFrame:
+    """
+    Filter out comments that are less than a certain length
+
+    :param df: dataframe
+    :param length: int
+    :return: dataframe with comments that are greater than the length
+    """
+
     df["len"] = df["comment_text"].str.len()
+    # Could also check if all toxic columns are 0
     # print(df.loc[(df["len"] <= length) & (df["toxic"] == 0) & (
-    #             df["severe_toxic"] == 0) & (df["obscene"] == 0) & (
-    #                          df["threat"] == 0) & (df["insult"] == 0) & (
-    #                          df["identity_hate"] == 0)])
-
-
-    c = 0
-    for i, r in df.iterrows():
-        text = r["comment_text"]
-        e = isEnglish(text)
-
-        if not e:
-            print(text)
-            break
-            c += 1
-            if c % 1000 == 0:
-                print(text)
-    print(c)
-
-    # df.DB_user.replace({r'[^\x00-\x7F]+': ''}, regex=True, inplace=True)
-    df["comment_text"].replace({r'[^\x00-\x7F]+'}, regex=True, inplace=True)
-    print(df.loc[df["id"] == "00025465d4725e87"])
-    df.to_csv("../input/train_filtered.csv", index=False)
+    #         df["severe_toxic"] == 0) & (df["obscene"] == 0) & (
+    #                      df["threat"] == 0) & (df["insult"] == 0) & (
+    #                      df["identity_hate"] == 0)])
 
     return df.loc[df["len"] > length]
+
+
+def filterNonEnglishChars(df: pd.DataFrame) -> pd.DataFrame:
+    """
+        Filter out non-english characters
+
+        :param df: dataframe
+        :return: dataframe with non-english characters filtered out
+    """
+
+    df["comment_text"] = df['comment_text'].str \
+        .encode('ascii', 'ignore').str.decode('ascii')
+
+    return df
 
 
 main()
