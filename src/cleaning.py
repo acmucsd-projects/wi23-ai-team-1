@@ -1,4 +1,5 @@
 import pandas as pd
+from nltk.corpus import stopwords
 
 
 def filterByNumWords(df: pd.DataFrame, numWords: int) -> pd.DataFrame:
@@ -28,6 +29,21 @@ def filterNonEnglishChars(df: pd.DataFrame) -> pd.DataFrame:
     #     .encode('ascii', 'ignore').str.decode('ascii')
     df["comment_text"].replace(r"[^A-Za-z\s]+", "", regex=True,
                                inplace=True)
+
+    return df
+
+
+def removeStopWords(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Remove stop words
+
+    :param df: dataframe
+    :return: dataframe with stop words removed
+    """
+
+    wordsToRemove = stopwords.words('english')
+    pattern = r"\b({})\b".format('|'.join(wordsToRemove))
+    df["comment_text"] = df["comment_text"].str.replace(pattern, "", regex=True)
 
     return df
 
