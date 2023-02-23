@@ -43,7 +43,8 @@ def removeStopWords(df: pd.DataFrame) -> pd.DataFrame:
 
     wordsToRemove = stopwords.words('english')
     pattern = r"\b({})\b".format('|'.join(wordsToRemove))
-    df["comment_text"] = df["comment_text"].str.replace(pattern, "", regex=True)
+    df["comment_text"] = df["comment_text"].str.replace(
+        pattern, "", regex=True)
 
     return df
 
@@ -88,3 +89,9 @@ def isEnglish(s: str) -> bool:
         return False
     else:
         return True
+
+
+def trimWhitespace(df: pd.DataFrame) -> pd.DataFrame:
+    df["comment_text"] = df["comment_text"].str.strip()
+
+    return df
