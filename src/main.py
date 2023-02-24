@@ -2,7 +2,7 @@ import pandas as pd
 
 from cleaning import filterNonEnglishChars, filterByNumWords, splitIntoWords, \
     toLowerCase, removeStopWords, trimWhitespace
-from src.exploring import graphBasedOnNumWords
+from src.exploring import graphBasedOnNumWords, getFrequencyOfWords
 
 
 def cleanData():
@@ -21,7 +21,8 @@ def main():
     # cleanData()
 
     df = pd.read_csv("input/train_cleaned.csv")
-    graphBasedOnNumWords(df)
+    # graphBasedOnNumWords(df)
+    getFrequencyOfWords(df)
 
 
 main()

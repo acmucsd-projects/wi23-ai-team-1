@@ -20,3 +20,12 @@ def graphBasedOnNumWords(df: pd.DataFrame) -> None:
     plt.show()
     plt.close()
     print(df["num_words"].describe())
+
+
+def getFrequencyOfWords(df: pd.DataFrame) -> None:
+    """
+    Gets the frequency of words in all comment.
+    :param df: The Pandas DataFrame.
+    :return: None.
+    """
+    print(pd.Series(" ".join(df["comment_text"]).split()).value_counts()[:20])
