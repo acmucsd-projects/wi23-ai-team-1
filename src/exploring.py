@@ -29,3 +29,18 @@ def getFrequencyOfWords(df: pd.DataFrame) -> None:
     :return: None.
     """
     print(pd.Series(" ".join(df["comment_text"]).split()).value_counts()[:20])
+
+
+def getFrequencyOfToxicWords(df: pd.DataFrame) -> None:
+    """
+    Gets the frequency of words in all comment.
+    :param df: The Pandas DataFrame.
+    :return: None.
+    """
+
+    toxicValues = ["toxic", "severe_toxic", "obscene", "threat", "insult",
+                   "identity_hate"]
+    filteredDf = df.loc[df[toxicValues].sum(axis=1) > 0]
+
+    print(pd.Series(" ".join(filteredDf["comment_text"]).split())
+          .value_counts()[:20])
