@@ -40,6 +40,7 @@ def getFrequencyOfToxicWords(df: pd.DataFrame) -> None:
 
     toxicValues = ["toxic", "severe_toxic", "obscene", "threat", "insult",
                    "identity_hate"]
+    # toxicValues = ["identity_hate"]
     filteredDf = df.loc[df[toxicValues].sum(axis=1) > 0]
 
     print(pd.Series(" ".join(filteredDf["comment_text"]).split())
