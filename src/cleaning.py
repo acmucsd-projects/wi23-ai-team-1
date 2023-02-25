@@ -95,3 +95,10 @@ def trimWhitespace(df: pd.DataFrame) -> pd.DataFrame:
     df["comment_text"] = df["comment_text"].str.strip()
 
     return df
+
+customStopWords = stopwords.words("english")
+
+def additionalStopWords():
+    customStopWords.append('wikipedia')
+    customStopWords.append('article')
+    customStopWords.append('page')
