@@ -2,8 +2,9 @@ import pandas as pd
 
 from cleaning import filterNonEnglishChars, filterByNumWords, splitIntoWords, \
     toLowerCase, removeStopWords, trimWhitespace
-from src.exploring import graphBasedOnNumWords, getFrequencyOfWords, \
+from exploring import graphBasedOnNumWords, getFrequencyOfWords, \
     getFrequencyOfToxicWords
+from modeling import build_poop_model
 
 
 def cleanData():
@@ -21,10 +22,12 @@ def cleanData():
 def main():
     # cleanData()
 
-    df = pd.read_csv("input/train_cleaned.csv")
+    # df = pd.read_csv("input/train_cleaned.csv")
     # graphBasedOnNumWords(df)
     # getFrequencyOfWords(df)
-    getFrequencyOfToxicWords(df)
+    # getFrequencyOfToxicWords(df)
+
+    build_poop_model()
 
 
 main()
