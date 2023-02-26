@@ -8,7 +8,7 @@ from modeling import build_poop_model
 
 
 def cleanData():
-    df = pd.read_csv("input/train.csv")
+    # df = pd.read_csv("input/train.csv")
     df = toLowerCase(df)
     df = filterNonEnglishChars(df)
     df = removeStopWords(df)
@@ -16,7 +16,7 @@ def cleanData():
     df = splitIntoWords(df)
     df = filterByNumWords(df, 3)
 
-    df.to_csv("input/train_cleaned.csv", index=False)
+    # df.to_csv("input/train_cleaned.csv", index=False)
 
 
 def main():
@@ -26,8 +26,9 @@ def main():
     # graphBasedOnNumWords(df)
     # getFrequencyOfWords(df)
     # getFrequencyOfToxicWords(df)
-
-    build_poop_model()
+    cleaned_df = pd.read_csv("input/train_cleaned.csv")
+    print(cleaned_df.shape)
+    print(cleaned_df.head())
 
 
 main()
