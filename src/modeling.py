@@ -37,7 +37,7 @@ def text_vectorization(data):
     return vectorize_layer
 
 
-def build_poop_model():
+def build_dummy_model():
     df = pd.read_csv("input/train_cleaned.csv")
 
     X = df["comment_text"]
@@ -49,10 +49,10 @@ def build_poop_model():
     print(X_train.head())
     print(y_train.head())
 
-    vectorized_layer = text_vectorization(X_train)
+    # vectorized_layer = text_vectorization(X_train)
 
     model = tf.keras.Sequential()
-    model.add(vectorized_layer)
+    # model.add(vectorized_layer)
     model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
     model.compile(optimizer="adam", loss="binary_crossentropy",
                   metrics=["accuracy"])

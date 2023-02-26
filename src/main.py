@@ -4,7 +4,7 @@ from cleaning import filterNonEnglishChars, filterByNumWords, splitIntoWords, \
     toLowerCase, removeStopWords, trimWhitespace
 from exploring import graphBasedOnNumWords, getFrequencyOfWords, \
     getFrequencyOfToxicWords
-from modeling import build_poop_model
+from modeling import build_dummy_model
 
 
 def cleanData():
@@ -26,9 +26,10 @@ def main():
     # graphBasedOnNumWords(df)
     # getFrequencyOfWords(df)
     # getFrequencyOfToxicWords(df)
-    cleaned_df = pd.read_csv("input/train_cleaned.csv")
-    print(cleaned_df.shape)
-    print(cleaned_df.head())
+    # cleaned_df = pd.read_csv("input/train_cleaned.csv")
+    # print(cleaned_df.shape)
+    # print(cleaned_df.head())
+    build_dummy_model()
 
 
 main()
