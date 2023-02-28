@@ -39,7 +39,6 @@ def text_vectorization(data):
 
 def build_dummy_model():
     df = pd.read_csv("input/train_cleaned.csv")
-
     X = df["comment_text"]
     y = df["toxic"]
 
@@ -49,12 +48,23 @@ def build_dummy_model():
     print(X_train.head())
     print(y_train.head())
 
-    # vectorized_layer = text_vectorization(X_train)
+    vectorized_layer = text_vectorization(X_train)
 
-    model = tf.keras.Sequential()
-    # model.add(vectorized_layer)
-    model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
-    model.compile(optimizer="adam", loss="binary_crossentropy",
+    embedding_layer = tf.keras.layers.Embedding(
+        input_dim=len(vectorized_layer.get_vocabulary()),
+        output_dim=20,
+        mask_zero=True
+    )
+
+    model = tf.keras.Sequential([
+        vectorized_layer,
+        embedding_layer,
+        tf.keras.layers.GlobalAveragePooling1D(),
+        tf.keras.layers.Dense(1, activation="sigmoid")
+    ])
+
+    model.compile(optimizer="adam",
+                  loss="binary_crossentropy",
                   metrics=["accuracy"])
 
     model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=1)
