@@ -3,16 +3,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-
 def text_vectorization(data):
-    maxlen = 0
-    longest_comment = ""
-    for comment in data['comment_text']:
-        length = len(comment)
-        if (length > maxlen):
-            longest_comment = comment
-    maxlen = max(maxlen, length)
-
+    
     vectorize_layer = tf.keras.layers.experimental.preprocessing.TextVectorization(
 
         max_tokens=None,
@@ -31,7 +23,7 @@ def text_vectorization(data):
         output_mode="int",
     )
 
-    numpyArray = data[data.columns[1]].to_numpy()
+    numpyArray = data.to_numpy()
     vectorize_layer.adapt(numpyArray)
 
     return vectorize_layer
@@ -39,12 +31,15 @@ def text_vectorization(data):
 
 def build_dummy_model():
     df = pd.read_csv("input/train_cleaned.csv")
+    
+    df = df.sample(frac=0.1)
+
     X = df["comment_text"]
     y = df["toxic"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42)
-
+        X, y, test_size=0.3, random_state=42)
+    
     print(X_train.head())
     print(y_train.head())
 
@@ -52,7 +47,7 @@ def build_dummy_model():
 
     embedding_layer = tf.keras.layers.Embedding(
         input_dim=len(vectorized_layer.get_vocabulary()),
-        output_dim=20,
+        output_dim=128,
         mask_zero=True
     )
 
@@ -72,4 +67,4 @@ def build_dummy_model():
     y_hat = model.predict(X_test)
     y_hat = [1 if y >= 0.5 else 0 for y in y_hat]
 
-    print(accuracy_score(y_test, y_hat))
+    print("\n\nTest accuracy was:", accuracy_score(y_test, y_hat))
