@@ -1,3 +1,5 @@
 jigsaw-toxic-comment-classification-challenge.zip
 *.zip
 input/
+.DS_Store
+__pycache__/
