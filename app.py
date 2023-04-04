@@ -1,180 +1,69 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
-import tensorflow as tf
-from tensorflow import keras
+st.set_page_config(page_title='Detecting Toxic Comments', page_icon=':guardsman:', layout='wide')
 
-from sklearn.model_selection import StratifiedShuffleSplit
+st.title('Detecting Toxic Comments')
 
+# Add a sidebar
+st.sidebar.subheader('Why is it important to be respectful towards others?')
 
-WILL_RUN = True
-TOXIC_CATEGORIES = ["toxic"]
+st.sidebar.subheader('Building positive relationships')
+st.sidebar.write('When we treat others with respect, kindness, and compassion, we are more likely to build positive and meaningful relationships with them.')
 
-data = pd.read_csv(
-    "/kaggle/input/toxic-message-classifier-dataset/train_cleaned.csv")
+st.sidebar.subheader('Creating a safe and supportive environment')
+st.sidebar.write('Toxic comments can hurt others and create a negative and unsafe environment. Being respectful towards others helps create a safe and supportive environment where everyone can thrive.')
 
+st.sidebar.subheader('Fostering mutual understanding')
+st.sidebar.write('Respectful behavior allows us to understand and appreciate different perspectives, backgrounds, and cultures, which helps us build bridges of mutual understanding.')
 
-def createEncoder():
-    NUM_ROWS = 150000
-    BATCH_SIZE = 64
+st.sidebar.subheader('Promoting personal growth')
+st.sidebar.write('When we treat others with respect, we are also promoting our own personal growth. Respect helps us develop self-awareness, empathy, and compassion, which are essential for personal growth and development.')
 
-    MAX_TOKENS = 5000
-    MAX_LENGTH = 200
-    encoder = tf.keras.layers.TextVectorization(
-        max_tokens=MAX_TOKENS, output_sequence_length=MAX_LENGTH)
-    encoder.adapt(data.head(NUM_ROWS)["comment_text"].tolist())
+st.write('')
 
-#     vocab = np.array(encoder.get_vocabulary())
-#     vocab[:20]
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown('### Tags related to toxic comments')
+    st.write('')
+    st.write('Toxic comments can take many different forms, such as:')
+    st.write('- Comments that are **toxic**: containing rude, disrespectful, or insulting language')
+    st.write('- Comments that are **severely toxic**: containing extremely offensive or abusive language')
+    st.write('- Comments that are **obscene**: containing vulgar, profane, or sexually explicit language')
+with col2:
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('')
+    st.write('- Comments that contain **threats**: expressing an intention to harm someone')
+    st.write('- Comments that are **insulting**: containing language that is intended to offend or belittle someone')
+    st.write('- Comments that express **identity hate**: containing language that is derogatory or discriminatory towards a particular group of people based on their race, religion, gender, or other personal characteristics')
+    st.write('')
 
-    return encoder
+st.subheader('Interactive Toxic Comment Detector')
 
+# Add a text box for user input
+comment = st.text_input('Enter your comment here:')
 
-def createModel(encoder):
-    # Sets random seed so results are identical every time
-    SEED = 1
-    tf.random.set_seed(SEED)
-    np.random.seed(SEED)
-    tf.keras.utils.set_random_seed(SEED)
-
-    model = tf.keras.Sequential([
-        encoder,
-        tf.keras.layers.Embedding(
-            input_dim=len(encoder.get_vocabulary()),
-            output_dim=256,
-            mask_zero=True
-        ),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Conv1D(128, 5, padding="valid",
-                               activation="relu", strides=1),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.MaxPooling1D(pool_size=4),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Bidirectional(
-            tf.keras.layers.LSTM(128, return_sequences=True)),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64)),
-        tf.keras.layers.Dense(256, activation="relu"),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(128, activation="relu"),
-        tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(len(TOXIC_CATEGORIES), activation="sigmoid")
-    ])
-
-    model.compile(loss=tf.keras.losses.BinaryCrossentropy(),
-                  optimizer=tf.keras.optimizers.Adam(1e-4),
-                  metrics=["accuracy"])
-
-    return model
-
-
-def getTrainingData():
-    # Classification for all types of toxicity
-    multiDf = data.head(NUM_ROWS)[["comment_text"] + TOXIC_CATEGORIES]
-
-    x = multiDf["comment_text"]
-    y = multiDf[TOXIC_CATEGORIES]
-
-    splitter = StratifiedShuffleSplit(random_state=1, test_size=0.2)
-
-    for train, test in splitter.split(x, y[TOXIC_CATEGORIES[0]]):
-        training_data = x.iloc[train]
-        training_target = y.iloc[train]
-        validation_data = x.iloc[test]
-        validation_target = y.iloc[test]
-
-    return training_data, training_target, validation_data, validation_target
-
-
-def trainModel(model, training_data, training_target, validation_data, validation_target):
-    # Early Stopping
-    callback = tf.keras.callbacks.EarlyStopping(
-        monitor="val_accuracy", patience=2)
-
-    history = model.fit(training_data, training_target, epochs=10, validation_data=(
-        validation_data, validation_target), callbacks=[callback], batch_size=32)
-
-
-if WILL_RUN:
-    encoder = createEncoder()
-    model = createModel(encoder)
-    td, tt, vd, vt = getTrainingData()
-    trainModel(model, td, tt, vd, vt)
-
-
-def getTestData():
-    test_data = pd.read_csv(
-        "/kaggle/input/toxic-message-classifier-dataset/test.csv")
-    test_labels = pd.read_csv(
-        "/kaggle/input/toxic-message-classifier-dataset/test_labels.csv")
-
-    merged_df = test_labels.merge(test_data, left_on="id", right_on="id")
-    merged_df = merged_df.loc[(merged_df["toxic"] != -1) & (merged_df["severe_toxic"] != -1) & (merged_df["obscene"] != -1)
-                              & (merged_df["threat"] != -1) & (merged_df["insult"] != -1) & (merged_df["identity_hate"] != -1)]
-
-    return merged_df
-
-
-def testZeroValues(merged_df):
-    test_df = merged_df["comment_text"]
-    query = " & ".join([f"({label} == 0)" for label in TOXIC_CATEGORIES])
-    filtered_df = merged_df.query(query)
-
-    filtered_test_dataset = filtered_df["comment_text"]
-    filtered_df_target = filtered_df[TOXIC_CATEGORIES]
-    model.evaluate(filtered_test_dataset, filtered_df_target)
-
-
-def testOneValues(merged_df):
-    test_df = merged_df["comment_text"]
-    query = " | ".join([f"({label} == 1)" for label in TOXIC_CATEGORIES])
-    filtered_df = merged_df.query(query)
-
-    filtered_test_dataset = filtered_df["comment_text"]
-    filtered_df_target = filtered_df[TOXIC_CATEGORIES]
-    model.evaluate(filtered_test_dataset, filtered_df_target)
-
-
-def testAllValues(merged_df):
-    test_df = merged_df["comment_text"]
-    test_target = merged_df[TOXIC_CATEGORIES]
-    model.evaluate(test_df, test_target)
-
-
-if WILL_RUN:
-    merged_df = getTestData()
-    testAllValues(merged_df)
-    testZeroValues(merged_df)
-    testOneValues(merged_df)
-
-
-def getSubmissionFile():
-    submission_set = pd.read_csv(
-        '/kaggle/input/toxic-message-classifier-dataset/test.csv')
-    submission_set.head()
-
-    x_test = submission_set['comment_text'].values
-    y_testing = model.predict(x_test, verbose=1, batch_size=BATCH_SIZE)
-
-    submission_df = pd.DataFrame(columns=[
-                                 'id', 'toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate'])
-    submission_df['id'] = submission_set['id']
-    submission_df['toxic'] = [0 if x[0] < 0.5 else 1 for x in y_testing]
-    submission_df['severe_toxic'] = [0 if x[1] < 0.5 else 1 for x in y_testing]
-    submission_df['obscene'] = [0 if x[2] < 0.5 else 1 for x in y_testing]
-    submission_df['threat'] = [0 if x[3] < 0.5 else 1 for x in y_testing]
-    submission_df['insult'] = [0 if x[4] < 0.5 else 1 for x in y_testing]
-    submission_df['identity_hate'] = [
-        0 if x[5] < 0.5 else 1 for x in y_testing]
-
-    submission_df.head()
-
-    submission_df.to_csv('/kaggle/working/submission.csv', index=False)
-
-
-df = pd.DataFrame({
-    'first column': [1, 2, 3, 4],
-    'second column': [10, 20, 30, 40]
-})
+# Add a submit button
+submit_button = st.button('Submit')
