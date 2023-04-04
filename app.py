@@ -11,7 +11,8 @@ def run():
     st.title('Detecting Toxic Comments')
 
     # Add a sidebar
-    st.sidebar.subheader('Why is it important to be respectful towards others?')
+    st.sidebar.subheader(
+        'Why is it important to be respectful towards others?')
 
     st.sidebar.subheader('Building positive relationships')
     st.sidebar.write(
@@ -93,13 +94,13 @@ def run():
         predictions = model.predict([comment])
 
         # Create a dataframe with the predictions
-        df = pd.DataFrame({'Toxic': predictions[0][0]}, index=[0])
-        # df = pd.DataFrame({'Toxic': predictions[0][0],
-        #                    'Severely Toxic': predictions[0][1],
-        #                    'Obscene': predictions[0][2],
-        #                    'Threat': predictions[0][3],
-        #                    'Insult': predictions[0][4],
-        #                    'Identity Hate': predictions[0][5]}, index=[0])
+       # df = pd.DataFrame({'Toxic': predictions[0][0]}, index=[0])
+        df = pd.DataFrame({'Toxic': predictions[0][0],
+                           'Severely Toxic': predictions[0][1],
+                           'Obscene': predictions[0][2],
+                           'Threat': predictions[0][3],
+                           'Insult': predictions[0][4],
+                           'Identity Hate': predictions[0][5]}, index=[0])
 
         # Display the predictions
         st.write('')
