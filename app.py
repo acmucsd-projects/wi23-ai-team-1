@@ -97,11 +97,12 @@ def run():
         # Create a dataframe with the predictions
        # df = pd.DataFrame({'Toxic': predictions[0][0]}, index=[0])
         df = pd.DataFrame({'Toxic': predictions[0][0],
-                           'Severely Toxic': predictions[0][1],
+                           #'Severely Toxic': predictions[0][1],
                            'Obscene': predictions[0][2],
-                           'Threat': predictions[0][3],
+                           #'Threat': predictions[0][3],
                            'Insult': predictions[0][4],
-                           'Identity Hate': predictions[0][5]}, index=[0])
+                           #'Identity Hate': predictions[0][5]
+                           }, index=[0])
 
         # Display the predictions
         st.write('')
@@ -116,7 +117,7 @@ def run():
         # Display the toxicity score
         st.write('')
         st.subheader('Toxicity Score')
-        st.write(np.sum(predictions))
+        st.write(np.sum(predictions)/3)
 
 
 if __name__ == "__main__":
