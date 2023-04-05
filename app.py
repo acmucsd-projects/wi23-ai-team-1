@@ -83,9 +83,10 @@ def run():
     # Add a submit button
     submit_button = st.button('Submit')
 
+    model = tf.keras.models.load_model('model')
+
     if submit_button:
         # Load the model
-        model = tf.keras.models.load_model('model')
 
         # Create a dataframe from the user input
         # user_input = pd.DataFrame({'comment_text': [comment]})
