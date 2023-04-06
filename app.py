@@ -12,34 +12,57 @@ def run():
     st.title("Detecting Toxic Comments")
 
     # Add a sidebar
-    st.sidebar.subheader("Why is it important to be respectful towards others?")
+    st.sidebar.subheader("Team Members")
+    st.sidebar.write("Aniket Gupta")
+    st.sidebar.write("Arnav Modi")
+    st.sidebar.write("Jeffrey Lee")
+    st.sidebar.write("Jimmy Ying")
+    st.sidebar.write("Steven Shi")
+    st.sidebar.write("Vivian Liu")
+    st.sidebar.write("Mentor: Vincent Tu")
 
-    st.sidebar.subheader("Building positive relationships")
+    st.sidebar.write("")
+    st.sidebar.subheader("Motivation")
     st.sidebar.write(
-        "When we treat others with respect, kindness, and compassion, we are more likely to build positive and meaningful relationships with them."
+        "Online platforms offer us unprecedented opportunities to communicate and share knowledge. However, harmful comments can create a hostile environment that leads to cyberbullying and discrimination. To address this issue, our team developed a machine learning model that can classify harmful online comments and alert moderators to take action. By automating this process, we aim to create a safer and more inclusive online community for everyone."
     )
 
-    st.sidebar.subheader("Creating a safe and supportive environment")
-    st.sidebar.write(
-        "Toxic comments can hurt others and create a negative and unsafe environment. Being respectful towards others helps create a safe and supportive environment where everyone can thrive."
+    st.sidebar.write("")
+    st.sidebar.subheader("References")
+    st.sidebar.markdown(
+        "- [The Banality of Online Toxicity](https://policyoptions.irpp.org/magazines/october-2021/the-banality-of-online-toxicity/)"
+    )
+    st.sidebar.markdown(
+        "- [Tensorflow Neural Networks Text Classification Reference](https://www.tensorflow.org/text/tutorials/text_classification_rnn)"
+    )
+    st.sidebar.markdown(
+        "- [Tensorflow Class Weighting](https://www.tensorflow.org/guide/keras/train_and_evaluate#using_sample_weighting_and_class_weighting)"
+    )
+    st.sidebar.markdown(
+        "- [Overfitting and Underfitting](https://www.tensorflow.org/tutorials/keras/overfit_and_underfit)"
+    )
+    st.sidebar.markdown(
+        "- [Visualizing Deep Learning Models](https://towardsdatascience.com/deep-learning-model-visualization-tools-which-is-best-83ecbe14fa7)"
     )
 
-    st.sidebar.subheader("Fostering mutual understanding")
-    st.sidebar.write(
-        "Respectful behavior allows us to understand and appreciate different perspectives, backgrounds, and cultures, which helps us build bridges of mutual understanding."
-    )
+    st.sidebar.write("")
+    st.sidebar.write("")
+    st.sidebar.write("")
 
-    st.sidebar.subheader("Promoting personal growth")
-    st.sidebar.write(
-        "When we treat others with respect, we are also promoting our own personal growth. Respect helps us develop self-awareness, empathy, and compassion, which are essential for personal growth and development."
+    st.sidebar.markdown(
+        "<a href='https://github.com/acmucsd-projects/wi23-ai-team-1'><img src='https://cdn.iconscout.com/icon/free/png-256/github-163-761603.png' style='width: 100px;'></a>",
+        unsafe_allow_html=True,
     )
 
     st.write("")
 
     col1, col2 = st.columns(2)
+
     with col1:
-        st.markdown("### Tags related to toxic comments")
         st.write("")
+        st.markdown(
+            "![Alt Text](https://media.istockphoto.com/id/1278019531/vector/victim-of-cyber-bullying.jpg?s=612x612&w=0&k=20&c=DyMvMsOGJJ-Q54LFpGsiH86Yaabfu43LuvCv_vKVHj0=)"
+        )
         st.write("Toxic comments can take many different forms, such as:")
         st.write(
             "- Comments that are **toxic**: containing rude, disrespectful, or insulting language"
@@ -51,6 +74,8 @@ def run():
             "- Comments that are **obscene**: containing vulgar, profane, or sexually explicit language"
         )
     with col2:
+        st.write("")
+        st.write("")
         st.write("")
         st.write("")
         st.write("")
@@ -93,19 +118,28 @@ def run():
     # Add a submit button
     submit_button = st.button("Submit")
 
+    model = tf.keras.models.load_model("model")
+
     if submit_button:
+        # Load the model
+
+        # Create a dataframe from the user input
+        # user_input = pd.DataFrame({'comment_text': [comment]})
+
+        # Make predictions
         predictions = predict_toxicity(comment)
 
         # Create a dataframe with the predictions
         # df = pd.DataFrame({'Toxic': predictions[0][0]}, index=[0])
+        [toxic, severe_toxic, obscene, threat, insult, identity_hate] = predictions[0]
         df = pd.DataFrame(
             {
-                "Toxic": predictions[0][0],
-                "Severely Toxic": predictions[0][1],
-                "Obscene": predictions[0][2],
-                "Threat": predictions[0][3],
-                "Insult": predictions[0][4],
-                "Identity Hate": predictions[0][5],
+                "Toxic": toxic,
+                #'Severely Toxic': predictions[0][1],
+                "Obscene": obscene,
+                #'Threat': predictions[0][3],
+                "Insult": insult,
+                #'Identity Hate': predictions[0][5]
             },
             index=[0],
         )
@@ -123,22 +157,16 @@ def run():
         # Display the toxicity score
         st.write("")
         st.subheader("Toxicity Score")
-        st.write(np.sum(predictions))
+        st.write((toxic + obscene + insult) / 3)
 
 
 @st.cache_resource
 def predict_toxicity(phrase):
     # Load the model
-    print("Loading model")
     model = tf.keras.models.load_model("model")
-    print("Loaded model")
-
-    # Create a dataframe from the user input
-    # user_input = pd.DataFrame({'comment_text': [comment]})
 
     # Make predictions
     predictions = model.predict([phrase])
-    print("Prediction made")
 
     return predictions
 
