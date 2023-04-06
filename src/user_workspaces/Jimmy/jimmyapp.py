@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 
 
 def run():
@@ -11,8 +11,12 @@ def run():
     st.title('Detecting Toxic Comments')
 
     # Add a sidebar
-    st.sidebar.subheader(
-        'Why is it important to be respectful towards others?')
+    st.sidebar.subheader('References')
+    st.sidebar.markdown('- [The Banality of Online Toxicity](https://policyoptions.irpp.org/magazines/october-2021/the-banality-of-online-toxicity/)')
+    st.sidebar.markdown('- [Tensorflow Neural Networks Text Classification Reference](https://www.tensorflow.org/text/tutorials/text_classification_rnn)')
+    st.sidebar.markdown('- [Tensorflow Class Weighting](https://www.tensorflow.org/guide/keras/train_and_evaluate#using_sample_weighting_and_class_weighting)')
+    st.sidebar.markdown('- [Overfitting and Underfitting](https://www.tensorflow.org/tutorials/keras/overfit_and_underfit)')
+    st.sidebar.markdown('- [Visualizing Deep Learning Models](https://towardsdatascience.com/deep-learning-model-visualization-tools-which-is-best-83ecbe14fa7)')
 
     st.sidebar.subheader('Building positive relationships')
     st.sidebar.write(
@@ -33,9 +37,10 @@ def run():
     st.write('')
 
     col1, col2 = st.columns(2)
+
     with col1:
-        st.markdown('### Tags related to toxic comments')
         st.write('')
+        st.markdown("![Alt Text](https://media.istockphoto.com/id/1278019531/vector/victim-of-cyber-bullying.jpg?s=612x612&w=0&k=20&c=DyMvMsOGJJ-Q54LFpGsiH86Yaabfu43LuvCv_vKVHj0=)")
         st.write('Toxic comments can take many different forms, such as:')
         st.write(
             '- Comments that are **toxic**: containing rude, disrespectful, or insulting language')
@@ -44,6 +49,8 @@ def run():
         st.write(
             '- Comments that are **obscene**: containing vulgar, profane, or sexually explicit language')
     with col2:
+        st.write('')
+        st.write('')
         st.write('')
         st.write('')
         st.write('')
@@ -85,7 +92,7 @@ def run():
 
     if submit_button:
         # Load the model
-        model = tf.keras.models.load_model('model')
+        #model = tf.keras.models.load_model('model')
 
         # Create a dataframe from the user input
         # user_input = pd.DataFrame({'comment_text': [comment]})
@@ -95,12 +102,12 @@ def run():
 
         # Create a dataframe with the predictions
        # df = pd.DataFrame({'Toxic': predictions[0][0]}, index=[0])
-        df = pd.DataFrame({'Toxic': predictions[0][0],
-                           'Severely Toxic': predictions[0][1],
-                           'Obscene': predictions[0][2],
-                           'Threat': predictions[0][3],
-                           'Insult': predictions[0][4],
-                           'Identity Hate': predictions[0][5]}, index=[0])
+        df = pd.DataFrame({'Toxic': 1,
+                           'Severely Toxic': 2,
+                           'Obscene': 3,
+                           'Threat': 4,
+                           'Insult': 5,
+                           'Identity Hate': 6}, index=[0])
 
         # Display the predictions
         st.write('')
