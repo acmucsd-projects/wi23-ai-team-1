@@ -3,3 +3,5 @@ jigsaw-toxic-comment-classification-challenge.zip
 input/
 .DS_Store
 __pycache__/
+myenv/
+.idea/
